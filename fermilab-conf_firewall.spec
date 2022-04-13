@@ -1,6 +1,6 @@
 Name:		fermilab-conf_firewall
 Version:	1.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A firewall zone with Fermilab's public IP ranges
 
 Group:		Fermilab
@@ -11,7 +11,7 @@ Source0:	FNAL.xml
 BuildArch:	noarch
 
 # Top level package should require software specific packages
-Requires:	%{name}-firewalld == %{version}-%{release}
+Requires:	(%{name}-firewalld == %{version}-%{release} if firewalld)
 
 %description
 Deploy a firewall zone with Fermilab's public IP ranges.
@@ -36,6 +36,12 @@ Deploy a firewalld zone with Fermilab's public IP ranges.
 %{__install} -D %{SOURCE0} %{buildroot}/usr/lib/firewalld/zones/FNAL.xml
 
 
+%post firewalld -p /bin/bash
+systemctl is-active firewalld >/dev/null 2>&1
+if [[ $? -eq 0 ]]; then
+  firewall-cmd --reload
+fi
+
 %files
 %defattr(0644,root,root,0755)
 
@@ -44,5 +50,9 @@ Deploy a firewalld zone with Fermilab's public IP ranges.
 /usr/lib/firewalld/zones/FNAL.xml
 
 %changelog
+* Wed Apr 13 2022 Pat Riehecky <riehecky@fnal.gov> 1.0-2
+- Boolean conditional on firewalld
+- Reload firewalld if it is running to get the new zone
+
 * Wed Mar 9 2022 Pat Riehecky <riehecky@fnal.gov> 1.0-1
 - Initial build
