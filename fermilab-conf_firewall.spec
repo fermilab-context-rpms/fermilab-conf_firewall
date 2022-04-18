@@ -1,6 +1,6 @@
 Name:		fermilab-conf_firewall
 Version:	1.0
-Release:	2%{?dist}
+Release:	2.1%{?dist}
 Summary:	A firewall zone with Fermilab's public IP ranges
 
 Group:		Fermilab
@@ -39,7 +39,7 @@ Deploy a firewalld zone with Fermilab's public IP ranges.
 %post firewalld -p /bin/bash
 systemctl is-active firewalld >/dev/null 2>&1
 if [[ $? -eq 0 ]]; then
-  firewall-cmd --reload
+  systemctl reload firewalld >/dev/null 2>&1 || :
 fi
 
 %files
@@ -50,6 +50,9 @@ fi
 /usr/lib/firewalld/zones/FNAL.xml
 
 %changelog
+* Mon Apr 18 2022 Pat Riehecky <riehecky@fnal.gov> 1.0-2.1
+- use systemd to reload the config rather than firewall-cmd
+
 * Wed Apr 13 2022 Pat Riehecky <riehecky@fnal.gov> 1.0-2
 - Boolean conditional on firewalld
 - Reload firewalld if it is running to get the new zone
