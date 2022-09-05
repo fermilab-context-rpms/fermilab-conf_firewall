@@ -1,6 +1,6 @@
 Name:		fermilab-conf_firewall
 Version:	1.0
-Release:	2.1%{?dist}
+Release:	3%{?dist}
 Summary:	A firewall zone with Fermilab's public IP ranges
 
 Group:		Fermilab
@@ -50,6 +50,9 @@ fi
 /usr/lib/firewalld/zones/FNAL.xml
 
 %changelog
+* Mon Sep 5 2022 Pat Riehecky <riehecky@fnal.gov> 1.0-3
+- Default permit SSH from FNAL sources
+
 * Mon Apr 18 2022 Pat Riehecky <riehecky@fnal.gov> 1.0-2.1
 - use systemd to reload the config rather than firewall-cmd
 
